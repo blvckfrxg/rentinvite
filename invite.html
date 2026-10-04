@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Приглашение в RentManager</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #2E7D6B;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+        }
+        .container {
+            max-width: 400px;
+        }
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        p {
+            opacity: 0.9;
+            line-height: 1.5;
+        }
+        .spinner {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(255,255,255,0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        #fallback {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(255,255,255,0.15);
+            border-radius: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="loading">
+            <h1>Открываем RentManager...</h1>
+            <div class="spinner"></div>
+        </div>
+
+        <div id="fallback">
+            <h1>Приложение не открылось</h1>
+            <p>Убедитесь, что RentManager установлен на телефоне.</p>
+            <p>Если нет — попросите арендодателя прислать APK-файл.</p>
+        </div>
+    </div>
+
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const inviteId = params.get('id');
+
+        if (inviteId) {
+            const deepLink = 'rentmanager://invite/' + inviteId;
+            
+            // Пытаемся открыть приложение
+            window.location.href = deepLink;
+            
+            // Через 2 секунды, если не открылось, показываем fallback
+            setTimeout(() => {
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('fallback').style.display = 'block';
+            }, 2000);
+        } else {
+            document.getElementById('loading').innerHTML = 
+                '<h1>Ошибка: нет ID приглашения</h1>';
+        }
+    </script>
+</body>
+</html>
